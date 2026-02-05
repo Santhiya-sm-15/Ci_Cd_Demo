@@ -38,7 +38,7 @@ jobs:
           command_timeout: 10m
           script: |
             set -e
-            APP_DIR="home/${{ secrets.VM_USER }}/fastapi_demo"
+            APP_DIR="/home/${{ secrets.VM_USER }}/fastapi_demo"
             SERVICE_NAME="fastapi"
             SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
             REPO_URL="https://github.com/Santhiya-sm-15/Ci_Cd_Demo.git"
@@ -66,12 +66,12 @@ jobs:
             [Service]
             User=${{ secrets.VM_USER }}
             WorkingDirectory=${APP_DIR}
-            ExecStart=${APP_DIR}/venv/bin uvicorn app.main:app --host 0.0.0.0 --port 8000
+            ExecStart=${APP_DIR}/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
             Restart=always
             RestartSec=5
             Environment=PATH=${APP_DIR}/venv/bin
             [Install]
-            WantedBy=multi_user.target
+            WantedBy=multi-user.target
             EOF
 
             sudo systemctl daemon-reload
