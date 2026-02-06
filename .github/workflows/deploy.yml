@@ -24,14 +24,13 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          install_components: 'gke-gcloud-auth-plugin'
 
       - name: Install kubectl
         uses: azure/setup-kubectl@v4
 
       - name: Install GKE GCloud auth plugin
         run: |
-         gcloud components install gke-cloud-auth-plugin --quiet
+         gcloud components install gke-gcloud-auth-plugin --quiet
 
       - name: Configure Docker for Google Artifact Registry
         run: |
