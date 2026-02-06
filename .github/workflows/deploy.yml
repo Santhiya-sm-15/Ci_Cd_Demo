@@ -13,7 +13,7 @@ on:
       - develop
   workflow_dispatch:
     inputs:
-      environments:
+      environment:
         description: 'Deployment environment'
         required: true
         default: 'dev'
@@ -41,12 +41,13 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
       - name: Configure docker for Google Artifact Registry
         run: |
-          gcloud auth configure-docker "${ GCP_REGION }-docker.pkg.dev" --quiet
+          gcloud auth configure-docker "${GCP_REGION}-docker.pkg.dev" --quiet
       - name: Set Image tag
         id: image-tag
         run: |
-          echo "tags=${ GCP_REGION }-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${ ARTIFACT_REGISTRY }/demo:latest" >> $GITHUB_OUTPUT
-          echo "tags-sha=${ GCP_REGION }-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${ ARTIFACT_REGISTRY }/demo:${{ github.sha }}" >> $GITHUB_OUTPUT
+          IMAGE_PATH="${GCP_REGION}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${ARTIFACT_REGISTRY}/demo"
+          echo "tags=${GCP_REGION}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${ARTIFACT_REGISTRY}/demo:latest" >> $GITHUB_OUTPUT
+          echo "tags-sha=${GCP_REGION}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${ARTIFACT_REGISTRY}/demo:${{ github.sha }}" >> $GITHUB_OUTPUT
       - name: Build Docker Image
         run: |
           docker build -t ${{  steps.image-tag.outputs.tag }} -t ${{ steps.image-tag.outputs.tag-sha }} --file Dockerfile .
@@ -57,12 +58,12 @@ jobs:
 
       - name: Deploy to cloud run
         run: |
-          gcloud run deploy demo --image ${{ steps.image-tag.outputs.tag }} -- region ${ GCP_REGION } --platform managed --allow-unauthenticated --port 8080 \
+          gcloud run deploy demo --image ${{ steps.image-tag.outputs.tag }} -- region ${GCP_REGION} --platform managed --allow-unauthenticated --port 8080 \
           --cpu 1 --memory 512Mi --max-instances 5 --timeout 300s --quiet
       - name: Get URL
         id: get-url
         run: |
-          URL=$(gcloud run services describe demo --region ${ GCP_REGION } --platform managed --format 'value(status.url)')
+          URL=$(gcloud run services describe demo --region ${GCP_REGION} --platform managed --format 'value(status.url)')
           echo "URL=$URL" >> $GITHUB_OUTPUT
       - name: Verify Deployment 
         run: |
