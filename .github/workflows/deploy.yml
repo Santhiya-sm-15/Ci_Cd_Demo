@@ -50,7 +50,10 @@ jobs:
           echo "tags-sha=${GCP_REGION}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${ARTIFACT_REGISTRY}/demo:${{ github.sha }}" >> $GITHUB_OUTPUT
       - name: Build Docker Image
         run: |
-          docker build --tag ${{ steps.image-tag.outputs.tag }} --tag ${{ steps.image-tag.outputs.tag-sha }} --file Dockerfile .
+          docker build \
+            --tag ${{ steps.image-tag.outputs.tag }} \
+            --tag ${{ steps.image-tag.outputs.tag-sha }} \
+            --file Dockerfile .
       - name: Push Docker Image
         run: |
           docker push ${{ steps.image-tag.outputs.tag }} 
