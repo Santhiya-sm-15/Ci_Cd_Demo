@@ -41,12 +41,12 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
       - name: Configure docker for Google Artifact Registry
         run: |
-          gcloud auth configure-docker "${ env.GCP_REGION }-docker.pkg.dev" --quiet
+          gcloud auth configure-docker "${ GCP_REGION }-docker.pkg.dev" --quiet
       - name: Set Image tag
         id: image-tag
         run: |
-          echo "tags=$env.GCP_REGION-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${ ARTIFACT_REGISTRY }/demo:latest" >> $GITHUB_OUTPUT
-          echo "tags-sha=$env.GCP_REGION-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${ ARTIFACT_REGISTRY }/demo:${{ github.sha }}" >> $GITHUB_OUTPUT
+          echo "tags=${ env.GCP_REGION }-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${ env.ARTIFACT_REGISTRY }/demo:latest" >> $GITHUB_OUTPUT
+          echo "tags-sha=${ env.GCP_REGION }-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${ env.ARTIFACT_REGISTRY }/demo:${{ github.sha }}" >> $GITHUB_OUTPUT
       - name: Build Docker Image
         run: |
           docker build -t ${{  steps.image-tag.outputs.tag }} -t ${{ steps.image-tag.outpts.tag-sha }} --file Dockerfile .
