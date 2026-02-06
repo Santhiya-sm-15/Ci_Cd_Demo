@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: us-east4-docker.pkg.dev/qwiklabs-gcp-00-998e161ffd7e/my-repo/demo
+        image: us-east4-docker.pkg.dev/qwiklabs-gcp-00-998e161ffd7e/demo-repo/demo
         ports:
         - containerPort: 8000
 ---

@@ -6,7 +6,7 @@ on:
 
 env:
   GCP_REGION: us-east4
-  ARTIFACT_REGISTRY: my-repo
+  ARTIFACT_REGISTRY: demo-repo
 
 jobs:
   deploy:
@@ -67,5 +67,5 @@ jobs:
 
       - name: Deply to GKE
         run: |
-          gcloud container cluster get-credentials demo-cluster --zone us-east4-a --project ${{ secrets.GCP_PROJECT_ID }}
+          gcloud container clusters get-credentials demo-cluster --zone us-east4-a --project ${{ secrets.GCP_PROJECT_ID }}
           kubectl apply -f k8s/k8s-deplyment.yaml
